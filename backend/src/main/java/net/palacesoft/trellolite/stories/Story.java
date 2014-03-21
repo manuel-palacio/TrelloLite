@@ -28,6 +28,10 @@ public class Story {
         return lastName;
     }
 
+    public String getId() {
+        return id;
+    }
+
     @Override
     public String toString() {
         return String.format(
