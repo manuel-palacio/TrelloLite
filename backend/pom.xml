@@ -6,7 +6,8 @@
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>1.0.0.RC4</version>
     </parent>
-    <artifactId>TrelloLite</artifactId>
+    <version>1.0</version>
+    <artifactId>trello-lite</artifactId>
     <packaging>jar</packaging>
     <properties>
         <main.basedir>${basedir}/../..</main.basedir>
