@@ -1,0 +1,26 @@
+{
+    "name": "StoryClient",
+    "version": "0.0.0",
+    "homepage": "https://github.com/manuel-palacio/story-client",
+    "authors": [
+        "Manuel Palacio <emanuel.palacio@gmail.com>"
+    ],
+    "license": "MIT",
+    "ignore": [
+        "**/.*",
+        "node_modules",
+        "bower_components",
+        "app/bower_components",
+        "test",
+        "tests"
+    ],
+    "dependencies": {
+        "angular-strap": "latest",
+        "angular": "latest",
+        "angular-resource": "latest",
+        "angular-animate": "latest",
+        "angular-loading-bar": "latest",
+        "angular-route": "latest",
+        "underscore": "latest"
+    }
+}

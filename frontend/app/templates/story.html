@@ -1,0 +1,20 @@
+<div class="container">
+
+    <ul sortable class="list" ng-repeat="status in statuses">
+        <h3>{{status.name}}</h3>
+        <hr/>
+        <li hoverable ng-repeat="story in stories | filter:{status:status.name}" class="story"
+            ng-click="setCurrentStory(story)">
+            <article class="{{story.type}}">
+                <div class="modal-header">
+                    <button type="button" class="close" ng-click="deleteStory(story.id)">&times;</button>
+                    <h3 ng-click="editStory()">{{story.title}}</h3>
+                </div>
+                <div class="modal-body">
+                    <p>{{story.description}}</p>
+                </div>
+            </article>
+        </li>
+    </ul>
+
+</div>
