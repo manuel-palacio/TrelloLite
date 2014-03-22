@@ -9,23 +9,23 @@ public class Story {
     @Id
     private String id;
 
-    private String firstName;
-    private String lastName;
+    private String name;
+    private String description;
 
     public Story() {
     }
 
-    public Story (String firstName, String lastName) {
-        this.firstName = firstName;
-        this.lastName = lastName;
+    public Story (String name, String description) {
+        this.name = name;
+        this.description = description;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getName() {
+        return name;
     }
 
-    public String getLastName() {
-        return lastName;
+    public String getDescription() {
+        return description;
     }
 
     public String getId() {
@@ -34,9 +34,10 @@ public class Story {
 
     @Override
     public String toString() {
-        return String.format(
-                "Customer[id=%s, firstName='%s', lastName='%s']",
-                id, firstName, lastName);
+        return "Story{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                '}';
     }
-
 }

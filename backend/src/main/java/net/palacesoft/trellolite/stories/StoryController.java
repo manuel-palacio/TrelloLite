@@ -13,18 +13,17 @@ import java.util.List;
 @RequestMapping("/stories")
 public class StoryController {
 
-
     private StoryRepository storyRepository;
 
     @Autowired
     public StoryController(StoryRepository storyRepository) {
         this.storyRepository = storyRepository;
-        storyRepository.save(new Story("Alice", "Smith"));
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public List<Story> stories() {
-        return storyRepository.findAll();
+    public Story[] stories() {
+        List<Story> all = storyRepository.findAll();
+        return all.toArray(new Story[all.size()]);
     }
 
 
