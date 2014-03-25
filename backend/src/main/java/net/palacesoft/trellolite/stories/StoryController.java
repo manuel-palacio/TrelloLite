@@ -21,9 +21,8 @@ public class StoryController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public Story[] stories() {
-        List<Story> all = storyRepository.findAll();
-        return all.toArray(new Story[all.size()]);
+    public List<Story> stories() {
+        return storyRepository.findAll();
     }
 
     @RequestMapping(value = "/{storyId}", method = RequestMethod.GET)
