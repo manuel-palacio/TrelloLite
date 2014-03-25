@@ -27,7 +27,7 @@ public class StoryController {
     }
 
     @RequestMapping(value = "/{storyId}", method = RequestMethod.GET)
-    public Story[] story(@PathVariable("storyId") String id, HttpServletRequest request, HttpServletResponse response) {
+    public Story[] story(@PathVariable("storyId") String id, HttpServletResponse response) {
         List<Story> all = storyRepository.findById(id);
         if(all.isEmpty()) {
           response.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -38,7 +38,7 @@ public class StoryController {
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
-    public void save(@RequestBody Story story, HttpServletRequest request, HttpServletResponse response) {
+    public void save(Story story, HttpServletRequest request, HttpServletResponse response) {
         storyRepository.save(story);
         response.setHeader("Location", request.getRequestURL().append("/").append(story.getId()).toString());
 
