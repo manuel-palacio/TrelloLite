@@ -1,61 +1,79 @@
 package net.palacesoft.trellolite.stories;
 
-import com.mongodb.MongoClient;
 import net.palacesoft.trellolite.Application;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpStatus;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.IntegrationTest;
-import org.springframework.boot.test.RestTemplates;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.data.mongodb.core.MongoOperations;
-import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.web.client.RestTemplate;
 
-import java.net.UnknownHostException;
+import static com.jayway.restassured.RestAssured.given;
+import static com.jayway.restassured.RestAssured.when;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
 
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
-import static org.springframework.data.mongodb.core.query.Criteria.where;
-import static org.springframework.data.mongodb.core.query.Query.query;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = Application.class)
+@SpringApplicationConfiguration(classes = ApplicationTest.class)
 @IntegrationTest
 @WebAppConfiguration
 public class StoryControllerTest {
 
     private static final String BASE_URI = "http://localhost:8080/stories";
 
+    private Story story = new Story("test", "test");
 
-    RestTemplate restTemplate = RestTemplates.get();
+    private String location;
 
-    MongoOperations mongoTemplate;
+    @Autowired
+    MongoOperations mongoOps;
 
 
     @Before
-    public void initDb() throws UnknownHostException {
+    public void setUp() {
+        location = given().
+                contentType("application/json").
+                body(story).
+                when().
+                post(BASE_URI).getHeader("Location");
 
-        mongoTemplate = new MongoTemplate(new MongoClient(), "test");
-        mongoTemplate.insert(new Story("test", "test"));
+        assertThat(mongoOps.findById(StringUtils.substringAfterLast(location, "/"), Story.class), is(notNullValue()));
     }
+
 
     @After
     public void cleanUp() {
-        Story story = mongoTemplate.findOne(query(where("name").is("test")), Story.class);
-        mongoTemplate.remove(story);
-    }
+        when().
+                delete(location).
+                then().
+                assertThat().
+                statusCode(HttpStatus.SC_NO_CONTENT);
 
+        when().
+                get(location).
+                then().
+                assertThat().
+                statusCode(HttpStatus.SC_NOT_FOUND);
+
+        assertThat(mongoOps.findById(StringUtils.substringAfterLast(location, "/"), Story.class), is(nullValue()));
+
+    }
 
     @Test
     public void can_find_stories() {
 
-        Story[] stories = restTemplate.getForObject(BASE_URI, Story[].class);
-
-        assertThat(stories, is(notNullValue()));
+        when().
+                get(BASE_URI).
+                then().
+                assertThat().
+                body("name", hasItems("test"));
     }
 }

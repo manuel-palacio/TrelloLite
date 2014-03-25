@@ -26,6 +26,15 @@ public class StoryController {
         return all.toArray(new Story[all.size()]);
     }
 
+    @RequestMapping(value = "/{storyId}", method = RequestMethod.GET)
+    public Story[] story(@PathVariable("storyId") String id, HttpServletRequest request, HttpServletResponse response) {
+        List<Story> all = storyRepository.findById(id);
+        if(all.isEmpty()) {
+          response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        }
+        return all.toArray(new Story[all.size()]);
+    }
+
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)

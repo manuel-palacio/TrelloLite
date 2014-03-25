@@ -12,7 +12,7 @@ public class Story {
     private String name;
     private String description;
 
-    public Story() {
+    private Story() {
     }
 
     public Story (String name, String description) {
