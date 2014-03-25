@@ -2,7 +2,6 @@ package net.palacesoft.trellolite.stories;
 
 import net.palacesoft.trellolite.Application;
 import net.palacesoft.trellolite.config.MongoConfigurationTest;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import org.junit.After;
 import org.junit.Before;
@@ -18,7 +17,6 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.RestAssured.when;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
 
@@ -31,9 +29,9 @@ public class StoryControllerTest {
 
     private static final String BASE_URI = "http://localhost:8080/stories";
 
-    private Story story = new Story("test", "test");
 
-    private String location;
+    Story story1 = new Story("test", "test");
+    Story story2 = new Story("test2", "test2");
 
     @Autowired
     MongoOperations mongoOps;
@@ -41,31 +39,14 @@ public class StoryControllerTest {
 
     @Before
     public void setUp() {
-        location = given().
-                contentType("application/json").
-                body(story).
-                when().
-                post(BASE_URI).getHeader("Location");
-
-        assertThat(mongoOps.findById(StringUtils.substringAfterLast(location, "/"), Story.class), is(notNullValue()));
+        mongoOps.save(story1);
+        mongoOps.save(story2);
     }
 
 
     @After
     public void cleanUp() {
-        when().
-                delete(location).
-                then().
-                assertThat().
-                statusCode(HttpStatus.SC_NO_CONTENT);
-
-        when().
-                get(location).
-                then().
-                assertThat().
-                statusCode(HttpStatus.SC_NOT_FOUND);
-
-        assertThat(mongoOps.findById(StringUtils.substringAfterLast(location, "/"), Story.class), is(nullValue()));
+        mongoOps.dropCollection("story");
 
     }
 
@@ -76,6 +57,43 @@ public class StoryControllerTest {
                 get(BASE_URI).
                 then().
                 assertThat().
-                body("name", hasItems("test"));
+                body("name", hasItems("test", "test2"));
+    }
+
+    @Test
+    public void can_find_story() {
+
+        given().pathParam("storyId", story1.getId()).
+                get(BASE_URI + "/{storyId}").
+                then().
+                assertThat().
+                body("name", equalTo("test"));
+    }
+
+    @Test
+    public void can_delete_story() {
+
+        given().pathParam("storyId", story1.getId()).
+                delete(BASE_URI + "/{storyId}").
+                then().
+                assertThat().
+                statusCode(HttpStatus.SC_NO_CONTENT);
+
+        given().pathParam("storyId", story1.getId()).
+                when().
+                get(BASE_URI + "/{storyId}").
+                then().
+                assertThat().
+                statusCode(HttpStatus.SC_NOT_FOUND);
+    }
+
+    @Test
+    public void can_create_story() {
+        given().
+                contentType("application/json").
+                body(new Story("test", "test")).
+                when().
+                post(BASE_URI).then().assertThat().header("Location", is(notNullValue())).statusCode(HttpStatus.SC_CREATED);
+
     }
 }

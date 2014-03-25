@@ -26,12 +26,12 @@ public class StoryController {
     }
 
     @RequestMapping(value = "/{storyId}", method = RequestMethod.GET)
-    public Story[] story(@PathVariable("storyId") String id, HttpServletResponse response) {
-        List<Story> all = storyRepository.findById(id);
-        if(all.isEmpty()) {
+    public Story story(@PathVariable("storyId") String id, HttpServletResponse response) {
+        Story all = storyRepository.findById(id);
+        if(all == null) {
           response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
-        return all.toArray(new Story[all.size()]);
+        return all;
     }
 
 

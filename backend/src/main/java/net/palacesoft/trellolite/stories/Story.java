@@ -4,6 +4,8 @@ package net.palacesoft.trellolite.stories;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.UUID;
+
 @Document
 public class Story {
     @Id
@@ -18,6 +20,7 @@ public class Story {
     public Story (String name, String description) {
         this.name = name;
         this.description = description;
+        this.id = UUID.randomUUID().toString();
     }
 
     public String getName() {

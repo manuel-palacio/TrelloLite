@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface StoryRepository extends MongoRepository<Story, String> {
 
-    public List<Story> findById(String id);
+    public Story findById(String id);
 
 }
