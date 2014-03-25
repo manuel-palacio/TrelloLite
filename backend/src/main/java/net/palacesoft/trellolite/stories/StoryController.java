@@ -37,7 +37,7 @@ public class StoryController {
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
-    public void save(Story story, HttpServletRequest request, HttpServletResponse response) {
+    public void save(@RequestBody Story story, HttpServletRequest request, HttpServletResponse response) {
         storyRepository.save(story);
         response.setHeader("Location", request.getRequestURL().append("/").append(story.getId()).toString());
 
