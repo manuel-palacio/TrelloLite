@@ -1,5 +1,6 @@
 package net.palacesoft.trellolite.stories;
 
+import com.jayway.restassured.RestAssured;
 import net.palacesoft.trellolite.Application;
 import net.palacesoft.trellolite.config.MongoConfigurationTest;
 import org.apache.http.HttpStatus;
@@ -15,6 +16,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import static com.jayway.restassured.RestAssured.basic;
 import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.RestAssured.when;
 import static org.hamcrest.Matchers.*;
@@ -39,6 +41,7 @@ public class StoryControllerTest {
 
     @Before
     public void setUp() {
+        RestAssured.authentication = basic("user", "admin");
         mongoOps.save(story1);
         mongoOps.save(story2);
     }
