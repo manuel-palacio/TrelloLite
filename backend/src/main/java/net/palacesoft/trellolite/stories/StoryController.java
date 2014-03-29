@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @RestController
-@RequestMapping("/stories")
+@RequestMapping("/resources/stories")
 public class StoryController {
 
     private StoryRepository storyRepository;
@@ -40,7 +40,6 @@ public class StoryController {
     public void save(@RequestBody Story story, HttpServletRequest request, HttpServletResponse response) {
         storyRepository.save(story);
         response.setHeader("Location", request.getRequestURL().append("/").append(story.getId()).toString());
-
     }
 
     @RequestMapping(value = "/{storyId}", method = RequestMethod.DELETE)

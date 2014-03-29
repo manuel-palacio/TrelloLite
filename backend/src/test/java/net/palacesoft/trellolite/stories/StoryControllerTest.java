@@ -1,8 +1,10 @@
 package net.palacesoft.trellolite.stories;
 
-import com.jayway.restassured.RestAssured;
+import com.jayway.restassured.filter.session.SessionFilter;
 import net.palacesoft.trellolite.Application;
 import net.palacesoft.trellolite.config.MongoConfigurationTest;
+import net.palacesoft.trellolite.login.Credentials;
+import net.palacesoft.trellolite.login.LoginControllerTest;
 import org.apache.http.HttpStatus;
 import org.junit.After;
 import org.junit.Before;
@@ -16,9 +18,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import static com.jayway.restassured.RestAssured.basic;
 import static com.jayway.restassured.RestAssured.given;
-import static com.jayway.restassured.RestAssured.when;
 import static org.hamcrest.Matchers.*;
 
 
@@ -29,21 +29,25 @@ import static org.hamcrest.Matchers.*;
 @ActiveProfiles("test")
 public class StoryControllerTest {
 
-    private static final String BASE_URI = "http://localhost:8080/stories";
-
-
-    Story story1 = new Story("test", "test");
-    Story story2 = new Story("test2", "test2");
-
+    public static final String BASE_URI = "http://localhost:8080/resources/stories";
     @Autowired
     MongoOperations mongoOps;
-
+    private SessionFilter sessionFilter = new SessionFilter();
+    private Story story1 = new Story("test", "test");
+    private Story story2 = new Story("test2", "test2");
 
     @Before
     public void setUp() {
-        RestAssured.authentication = basic("user", "admin");
         mongoOps.save(story1);
         mongoOps.save(story2);
+
+        given().filter(sessionFilter).
+                contentType("application/json").
+                body(new Credentials("admin", "admin")).
+                when().
+                post(LoginControllerTest.BASE_URI + "/logIn").then().
+                assertThat().
+                statusCode(HttpStatus.SC_OK);
     }
 
 
@@ -56,7 +60,8 @@ public class StoryControllerTest {
     @Test
     public void can_fetch_stories() {
 
-        when().
+        given().filter(sessionFilter).
+                when().
                 get(BASE_URI).
                 then().
                 assertThat().
@@ -66,7 +71,9 @@ public class StoryControllerTest {
     @Test
     public void can_find_story() {
 
-        given().pathParam("storyId", story1.getId()).
+        given().
+                filter(sessionFilter).
+                pathParam("storyId", story1.getId()).
                 get(BASE_URI + "/{storyId}").
                 then().
                 assertThat().
@@ -76,13 +83,15 @@ public class StoryControllerTest {
     @Test
     public void can_delete_story() {
 
-        given().pathParam("storyId", story1.getId()).
+        given().filter(sessionFilter).
+                pathParam("storyId", story1.getId()).
                 delete(BASE_URI + "/{storyId}").
                 then().
                 assertThat().
                 statusCode(HttpStatus.SC_NO_CONTENT);
 
-        given().pathParam("storyId", story1.getId()).
+        given().filter(sessionFilter).
+                pathParam("storyId", story1.getId()).
                 when().
                 get(BASE_URI + "/{storyId}").
                 then().
@@ -92,17 +101,20 @@ public class StoryControllerTest {
 
     @Test
     public void can_create_story() {
-        given().
+        given().filter(sessionFilter).
                 contentType("application/json").
                 body(new Story("test", "test")).
                 when().
-                post(BASE_URI).then().assertThat().header("Location", is(notNullValue())).statusCode(HttpStatus.SC_CREATED);
+                post(BASE_URI).then().
+                assertThat().
+                header("Location", is(notNullValue())).
+                statusCode(HttpStatus.SC_CREATED);
 
     }
 
     @Test
     public void cannot_fetch_story_with_bad_credentials() {
-        given().auth().basic("", "").
+        given().
                 get(BASE_URI).
                 then().
                 assertThat().
