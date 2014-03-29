@@ -30,8 +30,10 @@ import static org.hamcrest.Matchers.*;
 public class StoryControllerTest {
 
     public static final String BASE_URI = "http://localhost:8080/resources/stories";
+
     @Autowired
-    MongoOperations mongoOps;
+    private MongoOperations mongoOps;
+
     private SessionFilter sessionFilter = new SessionFilter();
     private Story story1 = new Story("test", "test");
     private Story story2 = new Story("test2", "test2");
@@ -41,6 +43,10 @@ public class StoryControllerTest {
         mongoOps.save(story1);
         mongoOps.save(story2);
 
+        logIn();
+    }
+
+    private void logIn() {
         given().filter(sessionFilter).
                 contentType("application/json").
                 body(new Credentials("admin", "admin")).
