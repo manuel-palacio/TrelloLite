@@ -32,7 +32,7 @@ public class LoginControllerTest {
 
     @Before
     public void setUp() {
-        given().filter(sessionFilter).
+        given().log().all().filter(sessionFilter).
                 contentType("application/json").
                 body(new Credentials("admin", "admin")).
                 when().

@@ -3,6 +3,7 @@ package net.palacesoft.trellolite.stories;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,12 +27,18 @@ public class StoryController {
     }
 
     @RequestMapping(value = "/{storyId}", method = RequestMethod.GET)
-    public Story story(@PathVariable("storyId") String id, HttpServletResponse response) {
-        Story all = storyRepository.findById(id);
-        if(all == null) {
-          response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+    public ResponseEntity<Story> story(@PathVariable("storyId") String id) {
+        Story story = storyRepository.findById(id);
+        if (story == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return all;
+        return new ResponseEntity<>(story, HttpStatus.OK);
+    }
+
+    @RequestMapping(method = RequestMethod.PUT)
+    public ResponseEntity<Story> update(@RequestBody Story story) {
+        storyRepository.save(story);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 

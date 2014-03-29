@@ -1,6 +1,9 @@
 package net.palacesoft.trellolite.login;
 
 
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement(name = "credentials")
 public class Credentials {
     private String username;
     private String password;

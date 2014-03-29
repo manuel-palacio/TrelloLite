@@ -9,12 +9,14 @@ angular.module('app').factory 'StoryService', ($q, $http, $rootScope, $resource,
 
 
     saveStory: (story) ->
+      $rootScope.log("Posting " + story);
+
       $http.post("/resources/stories", story).success((result) ->
         $rootScope.$broadcast("storyChanged", ""))
 
 
     updateStory: (story) ->
-      $http.put("/resources/stories/#{story.id}", story).success((result) ->
+      $http.put("/resources/stories", story).success((result) ->
         FlashService.show({type: "success", content: "Story updated"}))
 
 

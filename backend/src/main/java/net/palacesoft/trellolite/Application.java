@@ -39,6 +39,7 @@ public class Application {
                 if (session.getAttribute(LoginController.USER) == null && !(path.contains("auth/loggedIn") || path.contains("auth/logIn"))) {
                     response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
                 } else {
+
                     filterChain.doFilter(request, response);
                 }
             }

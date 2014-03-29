@@ -19,6 +19,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import static com.jayway.restassured.RestAssured.given;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
 
@@ -71,7 +72,7 @@ public class StoryControllerTest {
                 get(BASE_URI).
                 then().
                 assertThat().
-                body("name", hasItems("test", "test2"));
+                body("title", hasItems("test", "test2"));
     }
 
     @Test
@@ -83,7 +84,7 @@ public class StoryControllerTest {
                 get(BASE_URI + "/{storyId}").
                 then().
                 assertThat().
-                body("name", equalTo("test"));
+                body("title", equalTo("test"));
     }
 
     @Test
@@ -115,6 +116,34 @@ public class StoryControllerTest {
                 assertThat().
                 header("Location", is(notNullValue())).
                 statusCode(HttpStatus.SC_CREATED);
+    }
+
+    @Test
+    public void can_update_story() {
+        Story story = given().
+                filter(sessionFilter).
+                contentType("application/json").
+                pathParam("storyId", story1.getId()).
+                get(BASE_URI + "/{storyId}").as(Story.class);
+
+        story.setTitle("updated");
+
+        given().filter(sessionFilter).
+                contentType("application/json").
+                body(story).
+                when().
+                put(BASE_URI).then().
+                assertThat().
+                statusCode(HttpStatus.SC_OK);
+
+        Story updated = given().
+                filter(sessionFilter).
+                contentType("application/json").
+                pathParam("storyId", story.getId()).
+                get(BASE_URI + "/{storyId}").as(Story.class);
+
+        assertThat(updated.getTitle(), is(equalTo(story.getTitle())));
+
 
     }
 

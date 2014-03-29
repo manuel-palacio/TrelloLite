@@ -11,7 +11,7 @@ angular.module('app').factory 'AuthenticationService', ($http, $location, $rootS
 
     login: (credentials) ->
       $rootScope.log("Logging in with " + credentials.username);
-      $http.post('/auth/logIn', {credentials: credentials}).success(@success).error(@error)
+      $http.post('/auth/logIn', credentials).success(@success).error(@error)
 
 
   new AuthenticationService()
