@@ -54,7 +54,7 @@ public class StoryControllerTest {
     }
 
     @Test
-    public void can_find_stories() {
+    public void can_fetch_stories() {
 
         when().
                 get(BASE_URI).
@@ -97,6 +97,16 @@ public class StoryControllerTest {
                 body(new Story("test", "test")).
                 when().
                 post(BASE_URI).then().assertThat().header("Location", is(notNullValue())).statusCode(HttpStatus.SC_CREATED);
+
+    }
+
+    @Test
+    public void cannot_fetch_story_with_bad_credentials() {
+        given().auth().basic("", "").
+                get(BASE_URI).
+                then().
+                assertThat().
+                statusCode(HttpStatus.SC_UNAUTHORIZED);
 
     }
 }
