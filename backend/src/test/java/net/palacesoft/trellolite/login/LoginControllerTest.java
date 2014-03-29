@@ -43,13 +43,24 @@ public class LoginControllerTest {
 
 
     @Test
-    public void is_logged_in() {
+    public void responds_true_if_logged_in() {
         given().filter(sessionFilter).
                 contentType("application/json").
                 when().
                 get(BASE_URI + "/loggedIn").then().
                 assertThat().
                 body(is(equalTo("true")));
+
+    }
+
+    @Test
+    public void responds_false_if_not_logged_in() {
+        given().
+                contentType("application/json").
+                when().
+                get(BASE_URI + "/loggedIn").then().
+                assertThat().
+                body(is(equalTo("false")));
 
     }
 
