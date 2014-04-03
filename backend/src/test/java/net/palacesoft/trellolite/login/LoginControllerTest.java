@@ -4,7 +4,6 @@ package net.palacesoft.trellolite.login;
 import com.jayway.restassured.filter.session.SessionFilter;
 import net.palacesoft.trellolite.Application;
 import net.palacesoft.trellolite.config.MongoConfigurationTest;
-import org.apache.http.HttpStatus;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,6 +14,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import static com.jayway.restassured.RestAssured.given;
+import static org.apache.http.HttpStatus.SC_OK;
+import static org.apache.http.HttpStatus.SC_UNAUTHORIZED;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 
@@ -32,13 +33,13 @@ public class LoginControllerTest {
 
     @Before
     public void setUp() {
-        given().log().all().filter(sessionFilter).
+        given().filter(sessionFilter).
                 contentType("application/json").
                 body(new Credentials("admin", "admin")).
                 when().
                 post(BASE_URI + "/logIn").then().
                 assertThat().
-                statusCode(HttpStatus.SC_OK);
+                statusCode(SC_OK);
     }
 
 
@@ -72,7 +73,6 @@ public class LoginControllerTest {
                 when().
                 post(BASE_URI + "/logIn").then().
                 assertThat().
-                statusCode(HttpStatus.SC_UNAUTHORIZED);
-
+                statusCode(SC_UNAUTHORIZED);
     }
 }
