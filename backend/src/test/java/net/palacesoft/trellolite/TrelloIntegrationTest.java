@@ -73,7 +73,7 @@ public class TrelloIntegrationTest {
 
     @After
     public void cleanUp() {
-        mongoOps.dropCollection("story");
+        mongoOps.dropCollection("stories");
 
     }
 
