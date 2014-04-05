@@ -10,6 +10,6 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@Profile("test")
-public @interface TestProfile {
+@Profile("embedded_mongo")
+public @interface EmbeddedMongo {
 }

@@ -9,8 +9,8 @@ import org.springframework.data.mongodb.config.AbstractMongoConfiguration;
 import java.net.UnknownHostException;
 
 @Configuration
-@TestProfile
-public class MongoConfigurationTest extends AbstractMongoConfiguration {
+@IntegrationTestMongo
+public class MongoTestConfiguration extends AbstractMongoConfiguration {
 
     @Override
     protected String getDatabaseName() {

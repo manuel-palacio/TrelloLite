@@ -9,6 +9,6 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@Profile("production")
-public @interface ProductionProfile {
+@Profile("default")
+public @interface ProductionMongo {
 }

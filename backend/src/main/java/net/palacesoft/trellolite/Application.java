@@ -24,6 +24,7 @@ public class Application {
 
     public static void main(String[] args) throws Exception {
         SpringApplication app = new SpringApplication(Application.class);
+        app.setShowBanner(false);
         app.run(args);
     }
 
@@ -36,10 +37,10 @@ public class Application {
                     throws ServletException, IOException {
                 String path = request.getServletPath();
                 HttpSession session = request.getSession();
-                if (session.getAttribute(LoginController.USER) == null && !(path.contains("auth/loggedIn") || path.contains("auth/logIn"))) {
+                if (session.getAttribute(LoginController.USER) == null
+                        && !(path.contains("auth/loggedIn") || path.contains("auth/logIn"))) {
                     response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
                 } else {
-
                     filterChain.doFilter(request, response);
                 }
             }
