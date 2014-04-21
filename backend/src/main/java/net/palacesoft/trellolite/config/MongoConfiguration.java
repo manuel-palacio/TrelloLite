@@ -11,7 +11,6 @@ import java.net.UnknownHostException;
 
 @Configuration
 @EnableMongoRepositories
-@ProductionMongo
 public class MongoConfiguration extends AbstractMongoConfiguration {
 
     @Override
