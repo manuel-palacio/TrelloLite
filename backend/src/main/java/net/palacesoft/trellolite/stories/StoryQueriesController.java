@@ -21,7 +21,6 @@ public class StoryQueriesController {
 
     @RequestMapping(method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    @ResponseBody
     public List<Story> stories() {
         return storyRepository.findAll();
     }

@@ -41,7 +41,7 @@ public class ViewStoryTest {
 
 
     @Test
-    public void can_return_stories() throws Exception {
+    public void can_get_stories() throws Exception {
 
 
         when(storyRepository.findAll()).thenReturn(stories);
